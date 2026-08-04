@@ -125,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b30b10369056cb4f88a520c48043e0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Obstacle
-  requiredSmartItem: Linggis
-  requiredBruteItem: Palu
+  requiredSmartItem: Crowbar
+  requiredBruteItem: Hammer
   bruteForceHitsRequired: 3
+  smartSolutionFlag: 
+  bruteSolutionFlag: 

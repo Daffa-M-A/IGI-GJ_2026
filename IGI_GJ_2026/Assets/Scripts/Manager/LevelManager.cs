@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class LevelManager : MonoBehaviour
 {
@@ -91,7 +92,6 @@ public class LevelManager : MonoBehaviour
     void ExecuteLoseCondition()
     {
         isTimerRunning = false;
-
         if (UIManager.Instance != null) UIManager.Instance.ShowLoseScreen();
 
         if (!hasFailedOnce)
@@ -99,12 +99,18 @@ public class LevelManager : MonoBehaviour
             hasFailedOnce = true;
             currentFloor++;
             Debug.Log("LOSE CONDITION 1: Waktu Habis! Kembali ke Lantai: " + currentFloor);
+
+            if (RestrictionManager.Instance != null)
+                RestrictionManager.Instance.ApplyRestrictions();
         }
         else
         {
             hasFailedOnce = false;
             currentFloor = maxFloor;
-            Debug.Log("LOSE CONDITION 2: Gagal Kedua! Reset ke Lantai Atas (Lantai 10).");
+            Debug.Log("LOSE CONDITION 2: Gagal Kedua! Reset ke Lantai Atas.");
+
+            if (RestrictionManager.Instance != null)
+                RestrictionManager.Instance.ClearRestrictions();
         }
 
         RebuildLevel(currentFloor);
@@ -123,6 +129,18 @@ public class LevelManager : MonoBehaviour
 
     public void PlayerReachedEndTrigger(GameObject roomPassed)
     {
+        if (SolutionTracker.Instance != null)
+        {
+            string solutionType = SolutionTracker.Instance.EvaluateFloorSolution(currentFloor);
+
+            // NANTI: Beri tahu Achievement System dan Diary System tentang solutionType ini
+            string branchID = $"Floor{currentFloor}_{solutionType}";
+
+            if (DiaryDataManager.Instance != null && solutionType != "Standard_Clear")
+            {
+                DiaryDataManager.Instance.UnlockSolutionBranch(branchID);
+            }
+        }
         hasFailedOnce = false;
         currentFloor--;
         Debug.Log("Lantai diselesaikan! Turun ke lantai: " + currentFloor);
@@ -136,6 +154,8 @@ public class LevelManager : MonoBehaviour
         {
             ShiftRoomsDown();
             ResetAndStartTimer();
+            if (SolutionTracker.Instance != null) SolutionTracker.Instance.ResetFlags();
+            if (RestrictionManager.Instance != null) RestrictionManager.Instance.ClearRestrictions();
         }
 
         roomPassed.GetComponentInChildren<RoomTrigger>().GetComponent<Collider>().enabled = true;

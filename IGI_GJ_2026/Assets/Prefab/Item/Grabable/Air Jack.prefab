@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3754793987768244833}
   - component: {fileID: 1337364348812304714}
   m_Layer: 7
-  m_Name: Palu
+  m_Name: Air Jack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,5 +125,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0075d26cd1464c438ea51af4a3c6ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToolItem
-  toolName: Palu
-  dropPrefab: {fileID: 5383754448062029683}
+  toolName: Air Jack
+  solutionFlag: HasPickedAirJack

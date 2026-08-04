@@ -2,22 +2,21 @@ using UnityEngine;
 
 public class PickupItem : MonoBehaviour, IInteractable
 {
-    [Header("Coin Settings")]
-    public int coinValue = 1;
+    public string itemName;
+    public string solutionFlag;
 
-    public string GetInteractText()
-    {
-        return $"[E] Ambil Koin";
-    }
+    public string GetInteractText() => $"[E] Ambil {itemName}";
 
     public void OnInteractE()
     {
-        InventoryManager.Instance.AddCoin(coinValue);
-        Destroy(gameObject);
+        InventoryManager.Instance.EquipItem(itemName, gameObject);
+
+        if (SolutionTracker.Instance != null && !string.IsNullOrEmpty(solutionFlag))
+            SolutionTracker.Instance.SetFlag(solutionFlag);
+
+        if (RestrictionManager.Instance != null)
+            RestrictionManager.Instance.RecordInteraction(itemName);
     }
 
-    public void OnInteractLMB()
-    {
-
-    }
+    public void OnInteractLMB() { }
 }
